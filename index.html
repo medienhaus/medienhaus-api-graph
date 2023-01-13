@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8">
+    <meta name="author" content="aut">
+    <meta name="description" content="des">
+    <meta name="keywords" content="ke">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="./assets/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/x-icon" href="./favicon.ico" sizes="16x16 32x32">
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" sizes="any">
+    <link rel="mask-icon" type="image/svg+xml" href="./favicon.svg">
+    <link rel="license" href="//creativecommons.org/licenses/by-nc-nd/4.0">
+    <link rel="stylesheet" type="text/css" href="./assets/css/index.css">
+    <link rel="stylesheet" type="text/css" href="./assets/css/custom.css">
+    <title>open data graph</title>
+   
+
+
+    <script src='./assets/js/force-graph.js'></script>
+
+  </head>
+  <body>
+    <header>
+ 
+      <section>
+        <div class="burger">
+          <button class="hamburger hamburger--squeeze" type="button">
+            <span class="hamburger-box">
+                <span class="hamburger-inner"></span>
+            </span>
+          </button>
+        </div>
+
+        <div class="menu">        
+            <nav>
+    
+            </nav>
+        </div>
+      </section>
+     
+      <side>
+        <h1><a href="./" rel="nofollow noopener noreferrer">graph data</a></h1>
+      </side>
+
+
+    </header>
+    <main  >
+      <div id="graph"></div>
+      <side id="itemOverlay"></side>
+    </main>
+
+   
+    
+      
+    <footer>
+      <p className="copyleft">build by <a href="https://medienhaus.dev" rel="nofollow noopener noreferrer"><strong>medienhaus/</strong></a></p>
+      <p>towards an <a href="https://attributable.org" rel="nofollow noopener noreferrer">attributable web</a></p>
+    </footer>
+    <script src="./assets/js/main.js"></script>
+    <script>ini()</script>
+    
+ 
+    <style>
+      footer {
+        margin-top: calc(var(--margin) * 1);
+      }
+      section { 
+        margin-bottom: calc(var(--margin)*2);
+      }
+
+      input, select, button {
+        margin-top: calc(var(--margin)/2);
+        margin-bottom: calc(var(--margin)/2);
+      }
+
+
+      [data-tooltip] {
+        cursor: help;
+        position: relative;
+        text-decoration: underline;
+      }
+      [data-tooltip][data-position="right"]::before {
+        left: 105%;
+        top: -50%;
+        transform: translateX(-20px);
+      }
+      [data-tooltip][data-position="bottom"]::before {
+        top: 150%;
+        transform: translateY(-20px);
+      }
+      [data-tooltip][data-position="left"]::before {
+        left: auto;
+        top: -50%;
+        right: 105%;
+        transform: translateX(20px);
+      }
+      [data-tooltip]:hover::before {
+        border-color: var(--color-fg);
+        border-radius: 8px;
+        border-style: solid;
+        border-width: calc(var(--margin) * 0.1);
+        color: var(--color-fg);
+        opacity: 1;
+        transform: translate(0);
+      }
+      [data-tooltip]::before {
+        content: attr(data-tooltip);
+        background-color: var(--color-bg);
+        display: block;
+        opacity: 0;
+        padding: 10px;
+        pointer-events: none;
+        position: absolute;
+        left: 0;
+        top: -50px;
+        text-align: center;
+        transform: translateY(20px);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        z-index: 1;
+      }
+    </style>
+  </body>
+</html>

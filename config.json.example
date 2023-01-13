@@ -1,0 +1,15 @@
+{
+    "name":"open data graph",
+    "head": {
+        "title":"open data graph",
+        "author":"medienhaus/",
+        "keywords": "medienhaus, customizable, modular, free, open-source, environment, decentralized, distributed, communication, collaboration",
+        "description": "Customizable, modular, free and open-source environment for decentralized, distributed communication and collaboration without third-party dependencies."
+    },
+    "api": {
+        "rootId": "",
+        "url": "",
+        "version": "/api/v2/"
+    }
+
+}
