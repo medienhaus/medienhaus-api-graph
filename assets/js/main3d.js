@@ -1,11 +1,3 @@
-let config 
-const apiUrl = "https://api.rundgang.udk-berlin.de/api/v2/"
-const iniId = '!suNRlIyeorKnuZHfld:content.udk-berlin.de'
-
-
-async function ini() {
-  config = await fetch('./config.json').then( (response) => response.json())
-}
 
 const container = {
   width: document.querySelector('main').offsetWidth,
@@ -13,7 +5,7 @@ const container = {
 }
 
 const initData = {
-nodes: [ {id: iniId, no:1, type:'context' } ],
+nodes: [ {id: config.api.rootId, no:1, type:'context' } ],
 links: []
 };
 
@@ -45,23 +37,28 @@ const vis = {
 const elem = document.getElementById("graph");
 
 
-const Graph = ForceGraph()(elem)
+const Graph = ForceGraph3D()(elem)
 
 .graphData(initData)
 //   .linkColor(() => '#000000')
 .height(container.height)
 .width(container.width)
+.backgroundColor('#FFFFFF')
 .enableNodeDrag(false)
 .nodeLabel('name')
 .onNodeClick(getContextFromApi)
-.nodeCanvasObject((node, ctx) => nodePaint(node, getColor(node.no), ctx))
+//.nodeColor( () => {return vis.colors.fg})
+.nodeThreeObject( (node) => nodePaint(node))
+.linkColor(() => {return vis.colors.fg})
+.linkOpacity(.5)
+//.nodeCanvasObject((node, ctx) => nodePaint(node, getColor(node.no), ctx))
 
 
 async function getContextFromApi(node) {
 let { nodes, links } = Graph.graphData();
 
 const id = node.id
-const call = await fetch(apiUrl+""+id)
+const call = await fetch(config.api.url+config.api.version+""+id)
 const data = await call.json()
 
 
@@ -74,8 +71,18 @@ view.focusedNode = nodes.find(n => node.id === n.id)
 
 await updateHeader()
 
-Graph.centerAt(node.x, node.y, 1000);
-Graph.zoom(3, 2000);
+const distance = 400;
+const distRatio = 1 + distance/Math.hypot(node.x, node.y, node.z);
+
+const newPos = node.x || node.y || node.z
+  ? { x: node.x * distRatio, y: node.y * distRatio, z: node.z * distRatio }
+  : { x: 0, y: 0, z: distance }; // special case if node is in (0,0,0)
+
+Graph.cameraPosition(
+  newPos, // new position
+  node, // lookAt ({ x, y, z })
+  3000  // ms transition duration
+);
 
 
 }
@@ -127,26 +134,35 @@ return data;
 
 const getColor = n => '#' + ((n * 1234567) % Math.pow(2, 24)).toString(16).padStart(6, '0');
 
-function nodePaint(node, color, ctx) {
+function nodePaint(node, color) {
+  // node.nodeColor( () => {vis.colors.fg})
 
-ctx.lineWidth = node.clicked ? 2 : 1
+  let obj;
 
-switch (node.type) {
-  case('item'):
-  ctx.fillStyle = vis.colors.fg;
-  ctx.beginPath(); 
-  ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false); 
-  ctx.fill(); 
-  break;
-  case('context'):
-  ctx.fillStyle = vis.colors.bg;
-  ctx.strokeStyle = vis.colors.fg;
-  ctx.beginPath(); 
-  ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false); 
-  ctx.stroke(); 
-  ctx.fill(); 
-  break;
-}
+  switch (node.type) {
+    case('item'):
+    obj= new THREE.Mesh(
+      new THREE.SphereGeometry(4), 
+      new THREE.MeshLambertMaterial({
+        color: vis.colors.fg
+      })
+    )
+    break;
+    case('context'):
+    obj=  new THREE.Mesh(
+      new THREE.TorusGeometry(4,2), 
+      new THREE.MeshLambertMaterial({
+        color: vis.colors.fg
+      })
+    )
+    break;
+  }
+
+  obj.rotation.x = Math.random(10)
+  obj.rotation.y = Math.random(10)
+  obj.rotation.z = Math.random(10)
+
+  return obj
 }
 
 async function updateHeader() {
